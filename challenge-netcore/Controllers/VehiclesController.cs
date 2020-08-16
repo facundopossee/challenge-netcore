@@ -48,6 +48,7 @@ namespace challenge_netcore.Controllers
         public async Task<IActionResult> Create()
         {
             List<string> owners = await GetOwners();
+            ViewData["owners"] = owners; 
             return View();
         }
 
