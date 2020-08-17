@@ -21,38 +21,38 @@ namespace challenge_netcore.Controllers
         }
 
         // GET: Vehicles
-        public async Task<IActionResult> Index()
+        public ActionResult Index()
         {
-            return View(await _context.Vehicles.ToListAsync());
+            return View(nameof(Index), _context.Vehicles.ToList());
         }
 
         // GET: Vehicles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicles
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var vehicle = _context.Vehicles
+                .FirstOrDefault(m => m.ID == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(nameof(Details), vehicle);
         }
 
         // GET: Vehicles/Create
         public async Task<IActionResult> Create()
         {
             List<string> owners = await GetOwners();
-            ViewData["owners"] = owners; 
-            return View();
+            ViewData["owners"] = owners;
+            return View(nameof(Create));
         }
 
-        private async Task<List<string>> GetOwners()
+        public async Task<List<string>> GetOwners()
         {
             string baseurl = "https://reqres.in/api/users";
             var data = new List<string>();
@@ -60,9 +60,9 @@ namespace challenge_netcore.Controllers
             for (int i = 1; i <= 3; i++) //pages
             {
                 var response = await ApiCall(baseurl + "?page=" + i);
-                JObject result = JObject.Parse(response);
-                var clientarray = result["data"].Value<JArray>();
-                foreach (var item in clientarray)
+                JObject responseObj = JObject.Parse(response);
+                var dataArray = responseObj["data"].Value<JArray>();
+                foreach (var item in dataArray)
                 {
                     data.Add(item["first_name"].ToString() + " " + item["last_name"].ToString());
                 }
@@ -86,94 +86,54 @@ namespace challenge_netcore.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,LicensePlate,Brand,Model,Doors,Owner")] Vehicle vehicle)
+        public ActionResult Create([Bind("ID,LicensePlate,Brand,Model,Doors,Owner")] Vehicle vehicle)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(vehicle);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(vehicle);
-        }
-
-        // GET: Vehicles/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicle = await _context.Vehicles.FindAsync(id);
-            if (vehicle == null)
-            {
-                return NotFound();
-            }
-            return View(vehicle);
-        }
-
-        // POST: Vehicles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,LicensePlate,Brand,Model,Doors,Owner")] Vehicle vehicle)
-        {
-            if (id != vehicle.ID)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
                 try
                 {
-                    _context.Update(vehicle);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    if (!VehicleExists(vehicle.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
-                return RedirectToAction(nameof(Index));
             }
             return View(vehicle);
         }
 
         // GET: Vehicles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var vehicle = await _context.Vehicles
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var vehicle =  _context.Vehicles
+                .FirstOrDefault(m => m.ID == id);
             if (vehicle == null)
             {
                 return NotFound();
             }
 
-            return View(vehicle);
+            return View(nameof(Delete), vehicle);
         }
 
         // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            var vehicle = await _context.Vehicles.FindAsync(id);
+            var vehicle =  _context.Vehicles.FirstOrDefault(v => v.ID == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
             _context.Vehicles.Remove(vehicle);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 

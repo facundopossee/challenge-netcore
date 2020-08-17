@@ -9,11 +9,8 @@ namespace challenge_netcore.Models
 {
     public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
-        {
-
-        }
-
-        public DbSet<Vehicle> Vehicles { get; set; }
+        public ApplicationDbContext() { }
+        public ApplicationDbContext(DbContextOptions options) : base(options) { }
+        public virtual DbSet<Vehicle> Vehicles { get; set; }
     }
 }
