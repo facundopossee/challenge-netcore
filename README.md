@@ -1,4 +1,8 @@
 # .NET Core - Challenge
+This project is a challenge for a .net core interview
+
+
+### STATEMENT
 
 #### INTRODUCCION
 El presente es un test de nivelación, realizado con el fin de evaluar los conocimientos técnicos con tecnología
