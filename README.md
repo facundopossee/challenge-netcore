@@ -1,6 +1,5 @@
 # .NET Core - Challenge
-This project is a challenge for a .net core interview
-
+This project was developed for a .net interview challenge
 
 ### STATEMENT
 
