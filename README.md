@@ -1,4 +1,4 @@
-# challenge-netcore
+# .NET Core - Challenge
 
 #### INTRODUCCION
 El presente es un test de nivelación, realizado con el fin de evaluar los conocimientos técnicos con tecnología
